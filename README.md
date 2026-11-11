@@ -58,6 +58,14 @@ pytest -q
 - Misfire counters
 - Plot output (matplotlib)
 
+## How this was built
+
+1. **Turned shop rules of thumb into code.** I took the checks I run in my head while reading live data (fuel trim totals, idle vs cruise trims, warm-up time, idle MAF per liter, O2 switching) and wrote each one as a separate rule in `analyzer.py`.
+2. **Made findings actionable.** Each finding has a severity (INFO, WARN, CRITICAL), what was seen, and the next test to run. For example, lean at idle but fine at cruise leads to a smoke test, not a new O2 sensor.
+3. **Used only the standard library.** The tool needs nothing but Python, so it runs on any shop laptop. It reads plain CSV exports from common scan tools.
+4. **Generated test logs.** `scripts/make_sample_logs.py` creates three synthetic 15-minute drives (healthy, vacuum leak, stuck-open thermostat) so the tests give the same result every run. They're labeled as synthetic, not real vehicle data.
+5. **Tested it.** 6 pytest tests cover the sample logs, overheating, low MAF and bad input files. All pass, and the README output comes from real runs.
+
 ## License
 
 MIT
